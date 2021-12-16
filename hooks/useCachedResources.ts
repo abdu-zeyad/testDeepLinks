@@ -50,7 +50,6 @@ Notifications.setNotificationHandler({
 export default function useCachedResources() {
   const [isLoadingComplete, setLoadingComplete] = React.useState(false);
   const responseListener = React.useRef<Subscription>();
-  const [expoPushToken, setExpoPushToken] = React.useState<string | undefined>();
 
   // Load any resources or data that we need prior to rendering the app
   React.useEffect(() => {
@@ -71,7 +70,7 @@ export default function useCachedResources() {
         SplashScreen.hideAsync();
       }
     }
-    registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
+    registerForPushNotificationsAsync()
 
     // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
     responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
