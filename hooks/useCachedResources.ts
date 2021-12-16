@@ -20,7 +20,6 @@ Notifications.setNotificationHandler({
 });
 export default function useCachedResources() {
   const [isLoadingComplete, setLoadingComplete] = React.useState(false);
-  const notificationListener = React.useRef<Subscription>();
   const responseListener = React.useRef<Subscription>();
   const [expoPushToken, setExpoPushToken] = React.useState<string | undefined>();
 
@@ -54,7 +53,8 @@ export default function useCachedResources() {
     loadResourcesAndDataAsync();
 
     return () => {
-      Notifications.removeNotificationSubscription(responseListener.current);
+      if (responseListener.current)
+        Notifications.removeNotificationSubscription(responseListener.current);
     };
   }, []);
 
