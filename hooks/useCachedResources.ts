@@ -4,7 +4,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import * as React from 'react';
 import Constants from 'expo-constants';
 import * as Notifications from 'expo-notifications';
-import { Platform } from 'react-native';
+import { Linking, Platform } from 'react-native';
 
 export type Subscription = {
   remove: () => void;
@@ -56,7 +56,7 @@ export default function useCachedResources() {
     async function loadResourcesAndDataAsync() {
       try {
         SplashScreen.preventAutoHideAsync();
-
+        await registerForPushNotificationsAsync()
         // Load fonts
         await Font.loadAsync({
           ...FontAwesome.font,
@@ -70,19 +70,19 @@ export default function useCachedResources() {
         SplashScreen.hideAsync();
       }
     }
-    registerForPushNotificationsAsync()
-
-    // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
-    responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
+    const subscription = Notifications.addNotificationResponseReceivedListener(response => {
       console.log(response);
-    });
 
+      const url = response.notification.request.content.data.url;
+      Linking.openURL(url);
+    });
 
     loadResourcesAndDataAsync();
 
     return () => {
       if (responseListener.current)
         Notifications.removeNotificationSubscription(responseListener.current);
+      subscription.remove()
     };
   }, []);
 
