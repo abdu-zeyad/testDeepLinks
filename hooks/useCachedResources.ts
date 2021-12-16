@@ -6,6 +6,10 @@ import Constants from 'expo-constants';
 import * as Notifications from 'expo-notifications';
 import { Platform } from 'react-native';
 
+export type Subscription = {
+  remove: () => void;
+};
+
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
