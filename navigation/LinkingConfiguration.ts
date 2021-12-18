@@ -35,16 +35,18 @@ const linking: LinkingOptions<RootStackParamList> = {
   async getInitialURL() {
     // First, you may want to do the default deep link handling
     // Check if app was opened from a deep link
-    // let url = await Linking.getInitialURL();
+    // const url = await Linking.getInitialURL();
+    // console.log(url, "asdsadsa");
+
     // if (url != null) {
-    //   console.log(url, "urllllll333");
-    //   // {"url":"exp://192.168.1.7:19000/--/modal"}
     //   return url;
     // }
+
     // Handle URL from expo push notifications
     const response = await Notifications.getLastNotificationResponseAsync();
+    console.log(response, "asdsadadasassadasd");
+
     url = response?.notification.request.content.data.url;
-    console.log(url, "expo url");
 
     return url;
   },
@@ -57,12 +59,13 @@ const linking: LinkingOptions<RootStackParamList> = {
     // Listen to expo push notifications
     const subscription = Notifications.addNotificationResponseReceivedListener(response => {
       const url = response.notification.request.content.data.url;
+
+      // Any custom logic to see whether the URL needs to be handled
+      //...
+
+      // Let React Navigation handle the URL
       listener(url);
-      // console.log(url, "urllllll2");
-
     });
-
-
 
     return () => {
       // Clean up the event listeners
